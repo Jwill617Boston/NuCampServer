@@ -9,10 +9,9 @@ partnerRouter
       next();
    })
    .get((req, res) => {
-      res.end("Will send all the partners to you");
+      res.end("This was send from GET command for partner");
    })
    .post((req, res) => {
-      res.write(`Updating the partner: ${req.params.partnerId}\n`);
       res.end(
          `Will add the partner: ${req.body.name} with description: ${req.body.description}`
       );
@@ -26,6 +25,7 @@ partnerRouter
    });
 
 partnerRouter
+   //   ":" req.params.data = React data
    .route("/:partnerId")
    .all((req, res, next) => {
       res.statusCode = 200;
@@ -40,7 +40,7 @@ partnerRouter
    .post((req, res) => {
       res.statusCode = 403;
       res.end(
-         `POST operation not supported on /partners/${req.params.partnerId}`
+         `POST operation not supported on /partner/${req.params.partnerId}`
       );
    })
    .put((req, res) => {
