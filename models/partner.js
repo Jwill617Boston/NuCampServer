@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 require("mongoose-currency").loadType(mongoose);
-const { TooManyRequests } = require('http-errors')
+
 
 
 const partnerSchema = new Schema({

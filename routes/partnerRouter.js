@@ -1,55 +1,40 @@
 const express = require("express");
-const partnerRouter = express.Router();
+const Promotion = require("../models/Promotion");
 
-partnerRouter
-   .route("/")
-   .all((req, res, next) => {
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "text/plain");
-      next();
+const PromotionRouter = express.Router();
+
+PromotionRouter.route("/")
+   .get((req, res, next) => {
+      Promotion.find()
+         .then((Promotions) => {
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(Promotions);
+         })
+         .catch((err) => next(err));
    })
-   .get((req, res) => {
-      res.end("This was send from GET command for partner");
-   })
-   .post((req, res) => {
-      res.end(
-         `Will add the partner: ${req.body.name} with description: ${req.body.description}`
-      );
+   .post((req, res, next) => {
+      Promotion.create(req.body)
+         .then((Promotion) => {
+            console.log("Promotion Created ", Promotion);
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(Promotion);
+         })
+         .catch((err) => next(err));
    })
    .put((req, res) => {
       res.statusCode = 403;
-      res.end("PUT operation not supported on /partners");
+      res.end("PUT operation not supported on /Promotions");
    })
-   .delete((req, res) => {
-      res.end("Deleting all partners");
+   .delete((req, res, next) => {
+      Promotion.deleteMany()
+         .then((response) => {
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.json(response);
+         })
+         .catch((err) => next(err));
    });
 
-partnerRouter
-   //   ":" req.params.data = React data
-   .route("/:partnerId")
-   .all((req, res, next) => {
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "text/plain");
-      next();
-   })
-   .get((req, res) => {
-      res.end(
-         `Will send details of the partner: ${req.params.partnerId} to you`
-      );
-   })
-   .post((req, res) => {
-      res.statusCode = 403;
-      res.end(
-         `POST operation not supported on /partner/${req.params.partnerId}`
-      );
-   })
-   .put((req, res) => {
-      res.write(`Updating the partner: ${req.params.partnerId}\n`);
-      res.end(`Will update the partner: ${req.body.name}
-        with description: ${req.body.description}`);
-   })
-   .delete((req, res) => {
-      res.end(`Deleting partner: ${req.params.partnerId}`);
-   });
-
-module.exports = partnerRouter;
+module.exports = promotionRouter;
